@@ -1,0 +1,129 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>Coin Flip DApp</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+        <script type="text/javascript" >
+            var contractAddress_inp = "{{contractAddress}}";
+            var contractABI_inp = JSON.parse('{{contractABI | safe}}');
+        </script>
+        <script src="{{ url_for('static', filename='app-script.js') }}"></script>
+    </head>
+    <style>
+        .component-center {
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+        }
+    </style>
+    <body>
+        <header>
+            <nav class="navbar navbar-light bg-primary">
+                <a class="text-white navbar-brand" href="/crowdsale">Help me through Crowdsale</a>
+            </nav>
+        </header>
+
+        <main class="component-center pb-5">
+            <h1 class="mt-3">Coin Flip DApp</h1>
+            <p class="text-monospace mb-3">A distributed app by Vieri Vincent<p>
+            <img class="img-fluid" style="width: 20vh" src="{{ url_for('static', filename='coin-flip.gif') }}" alt=”animated” />
+            <h3 class="my-3">Contract Information</h3>
+            <div>
+                <table class="table table-hover">
+                    <tbody>
+                      <tr>
+                        <th scope="row">Bet Creator:</th>
+                        <td id="creator">-</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Bet Taker:</th>
+                        <td id="better">-</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Bet Amount (ether):</th>
+                        <td id="amount">-</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Acccumulated Balance:</th>
+                        <td id="balance">-</td>
+                      </tr>
+                    </tbody>
+                </table>
+                <button id="refresh_info" class="btn btn-light btn-block">Refresh</button>
+                <p id="change-alert" style="font-size:0.7rem;" class="pt-1 mb-0 text-center text-monospace text-danger">
+                    There are changes made to the contract, please refresh!
+                </p>
+            </div>
+            <div class="mt-3 container">
+                <h3>What you can do...</h3>
+                <h5 class="mt-3">As a Creator</h5>
+                <div class="py-3 row">
+                    <div class="col-sm">
+                        <div class="dropdown">
+                            <button type="button" class="btn btn-outline-primary btn-block" data-toggle="dropdown" aris-haspopup="true" aria-expanded="false">
+                                Create Bet
+                            </button>
+                            <div class="px-3 py-3 dropdown-menu">
+                                  <div class="form-group">
+                                    <label>Commitment (32 bytes)</label>
+                                    <input id="commitment" type="text" class="form-control" placeholder="e.g. 0x.....">
+                                  </div>
+                                  <div class="form-group">
+                                    <label>Bet value in ether</label>
+                                    <input id="creator_value" type="value" class="form-control" placeholder=10>
+                                  </div>
+                                <button id="call_createBet" class="btn btn-primary">Create Bet</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm">
+                        <div class="dropdown">
+                            <button type="button" class="btn btn-outline-info btn-block" data-toggle="dropdown" aris-haspopup="true" aria-expanded="false">
+                                Reveal
+                            </button>
+                            <div class="px-3 py-3 dropdown-menu">
+                                <div class="form-group">
+                                  <label>Nonce that generate commitment</label>
+                                  <input id="nonce" type="text" class="form-control" placeholder="e.g. 2397429">
+                                </div>
+                              <button id="call_reveal" class="btn btn-info">Reveal</button>
+                          </div>
+                        </div>
+                    </div>
+                    <div class="col-sm">
+                        <button id="call_cancel" type="button" class="btn btn-outline-danger btn-block">Cancel</button>
+                    </div>
+                </div>
+                <hr/>
+                <h5 class="mt-3">As a Better</h5>
+                <div class="py-3 row">
+                    <div class="col-sm">
+                        <div class="dropdown">
+                            <button type="button" class="btn btn-outline-primary btn-block" data-toggle="dropdown" aris-haspopup="true" aria-expanded="false">
+                                Take Bet
+                            </button>
+                            <div class="px-3 py-3 dropdown-menu">
+                                <div class="form-group">
+                                  <label>Bet value in ether</label>
+                                  <input id="better_value" type="value" class="form-control" placeholder=10>
+                                </div>
+                              <button id="call_takeBet" class="btn btn-primary">Take Bet</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm">
+                        <button id="call_claimTimeout" type="button" class="btn btn-outline-info btn-block">Claim Timeout</button>
+                    </div>
+                    <div class="col-sm">
+                        <button id="call_withdraw" type="button" class="btn btn-outline-danger btn-block">Withdraw</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </body>
+</html>

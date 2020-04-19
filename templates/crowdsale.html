@@ -1,0 +1,94 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>Coin Flip DApp</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+        <script type="text/javascript" >
+            var contractAddress_inp = "{{contractAddress}}";
+            var contractABI_inp = JSON.parse('{{contractABI | safe}}');
+        </script>
+        <script src="{{ url_for('static', filename='cs-script.js') }}"></script>
+    </head>
+    <style>
+        .component-center {
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+        }
+    </style>
+    <body>
+        <header>
+            <nav class="navbar navbar-light bg-primary">
+                <a class="text-white navbar-brand" href="/">Back to DApp</a>
+            </nav>
+        </header>
+        <main class="component-center pb-5">
+            <h1 class="mt-3">Coin Flip DApp</h1>
+            <p class="text-monospace mb-3">A distributed app by Vieri Vincent<p>
+            <img class="img-fluid" style="width: 20vh" src="{{ url_for('static', filename='coin-flip.gif') }}" alt=”animated” />
+            <div class="container">
+                <div class="row">
+                    <div class="mr-5 col">
+                        <h3 class="my-3">Crowdsale Details</h3>
+                        <table class="table table-hover">
+                            <tbody>
+                                <tr>
+                                    <td><b>Start Period:</b></th>
+                                    <td id="start_period">-</td>
+                                    <td><b>End Period:</b></th>
+                                    <td id="end_period">-</td>
+                                </tr>
+                                <tr>
+                                    <td><b>Token Name:</b></th>
+                                    <td id="token_name">-</td>
+                                    <td><b>Token Symbol:</b></th>
+                                    <td id="token_symbol">-</td>
+                                </tr>
+                                <tr>
+                                    <td><b>Token Address:</b></th>
+                                    <td colspan="3" id="token_addr">-</td>
+                                </tr>
+                                <tr>
+                                    <td><b>Total Supply:</b></th>
+                                    <td id="total_supply">-</td>
+                                    <th><b>Current Balance:</b></th>
+                                    <td id="curr_balance">-</td>
+                                </tr>
+                                <tr>
+                                    <td><b>Token Price (ether):</b></th>
+                                    <td id="token_price">-</td>
+                                    <td><b>Accumulated Fund (ether):</b></th>
+                                    <td id="accm_fund">-</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <button id="refresh_info" class="btn btn-light btn-block">Refresh</button>
+                        <p id="change-alert" style="font-size:0.7rem;" class="pt-1 mb-0 text-center text-monospace text-danger">
+                            There are changes made to the contract, please refresh!
+                        </p>
+                    </div>
+                    <div class="ml-5 col">
+                        <h3 class="my-3">Buy Token</h3>
+                        <blockquote class="px-3 blockquote">
+                            <p class="mb-0 text-justify">By purchasing this token, you are helping the developer(s) of this DApp
+                                to bring forth more exciting features in the future. We thank you for
+                                buying the token and supporting us :)
+                            </p>
+                            <footer class="blockquote-footer">Coin Flip Developer Team</footer>
+                        </blockquote>
+                        <div class="form-group">
+                            <label>Token to Buy:</label>
+                            <input id="token_amount" type="value" class="form-control" placeholder=10>
+                            <button id="call_buyToken" class="mt-4 btn btn-light btn-block">Buy Token</button>
+                        </div>
+                    </div>
+                </div>
+            </div>           
+        </main>
+    </body>
+</html>
